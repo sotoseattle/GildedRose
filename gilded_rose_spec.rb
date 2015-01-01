@@ -46,4 +46,19 @@ describe GildedRose do
       brie.quality.must_equal 50
     end
   end
+
+  describe 'special case: Sulfuras' do
+    it 'never expires' do
+      initial_sell_in = sulf.sell_in
+      10.times { subject.update_quality }
+      sulf.sell_in.must_equal initial_sell_in
+    end
+
+    it 'never goes bad' do
+      initial_quality = sulf.quality
+      10.times { subject.update_quality }
+      sulf.quality.must_equal initial_quality
+    end
+  end
+
 end
