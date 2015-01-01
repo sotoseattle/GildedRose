@@ -1,19 +1,15 @@
+def change_in_quality_after_updated(something, n)
+  initial_quality = something.quality
+  n.times { subject.update_quality }
+  something.quality - initial_quality
+end
 
 def vest
   subject.items.detect { |i| i.name == "+5 Dexterity Vest" }
 end
 
-def vest_at_expiration
-  10.times { subject.update_quality }
-  subject.items.detect { |i| i.name == "+5 Dexterity Vest" }
-end
-
 def brie
   subject.items.detect { |i| i.name == "Aged Brie" }
-end
-
-def mong
-  subject.items.detect { |i| i.name == "Elixir of the Mongoose" }
 end
 
 def sulf
