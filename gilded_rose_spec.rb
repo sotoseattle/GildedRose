@@ -22,8 +22,13 @@ describe GildedRose do
   end
 
   it 'once the sell_in reaches 0, quality falls twice as fast' do
-    initial_quality = vest.quality
-    11.times { subject.update_quality }
-    vest.quality.must_equal initial_quality - 12
+    vest_at_expiration.quality.must_equal 10
+    subject.update_quality
+    vest.quality.must_equal 8
+  end
+
+  it 'quality cannot be negative' do
+    (vest.quality + vest.sell_in).times { subject.update_quality }
+    vest.quality.must_equal 0
   end
 end

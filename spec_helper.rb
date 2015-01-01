@@ -1,25 +1,30 @@
 
-  def vest
-    subject.items.detect { |i| i.name == "+5 Dexterity Vest" }
-  end
+def vest
+  subject.items.detect { |i| i.name == "+5 Dexterity Vest" }
+end
 
-  def brie
-    subject.items.detect { |i| i.name == "Aged Brie" }
-  end
+def vest_at_expiration
+  10.times { subject.update_quality }
+  subject.items.detect { |i| i.name == "+5 Dexterity Vest" }
+end
 
-  def mong
-    subject.items.detect { |i| i.name == "Elixir of the Mongoose" }
-  end
+def brie
+  subject.items.detect { |i| i.name == "Aged Brie" }
+end
 
-  def sulf
-    subject.items.detect { |i| i.name == "Sulfuras, Hand of Ragnaros" }
-  end
+def mong
+  subject.items.detect { |i| i.name == "Elixir of the Mongoose" }
+end
 
-  def pass
-    subject.items.detect { |i| i.name == "Backstage passes to a TAFKAL80ETC concert" }
-  end
+def sulf
+  subject.items.detect { |i| i.name == "Sulfuras, Hand of Ragnaros" }
+end
 
-  def conj
-    subject.items.detect { |i| i.name == "Conjured Mana Cake" }
-  end
+def pass
+  subject.items.detect { |i| i.name == "Backstage passes to a TAFKAL80ETC concert" }
+end
+
+def conj
+  subject.items.detect { |i| i.name == "Conjured Mana Cake" }
+end
 
