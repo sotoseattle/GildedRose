@@ -99,7 +99,6 @@ describe GildedRose do
 
   describe 'special case: conjured' do
     it 'quality falls twice as fast as standard items' do
-      skip # until refactored finished
       initial_quality = conj.quality
       subject.update_quality
       conj.quality.must_equal initial_quality - 2

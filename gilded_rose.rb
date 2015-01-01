@@ -58,5 +58,6 @@ class GildedRose
   end
 
   def update_conjure(item)
+    2.times { update_standard(item) }
   end
 end
