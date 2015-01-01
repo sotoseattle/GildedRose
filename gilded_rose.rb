@@ -1,63 +1,5 @@
 require './item.rb'
 
-class Stuff
-  def initialize(item)
-    @item = item
-  end
-
-  def one_day_passes
-    @item.sell_in -= 1
-  end
-
-  def verify_quality_limits
-    return if @item.quality.between?(0, 50)
-    @item.quality = (@item.quality > 0 ? 50 : 0)
-  end
-end
-
-class Standard < Stuff
-  def update
-    one_day_passes
-    @item.quality -= (@item.sell_in >= 0 ? 1 : 2)
-    verify_quality_limits
-  end
-end
-
-class Cheese < Stuff
-  def update
-    one_day_passes
-    @item.quality += 1
-    verify_quality_limits
-  end
-end
-
-class Sulfuras < Stuff
-  def update
-  end
-end
-
-class Concert < Stuff
-  def update
-    one_day_passes
-
-    return @item.quality = 0 if @item.sell_in <= 0
-    case @item.sell_in
-    when (1..5)  then @item.quality += 3
-    when (6..10) then @item.quality += 2
-    else              @item.quality += 1
-    end
-    verify_quality_limits
-  end
-end
-
-class Conjure < Stuff
-  def update
-    one_day_passes
-    2.times { @item.quality -= (@item.sell_in >= 0 ? 1 : 2) }
-    verify_quality_limits
-  end
-end
-
 class GildedRose
   attr_reader :items
 
@@ -74,14 +16,76 @@ class GildedRose
   end
 
   def update_quality
-    items.each do |item|
-      case item.name
-      when 'Aged Brie' then Cheese.new(item).update
-      when 'Sulfuras, Hand of Ragnaros' then Sulfuras.new(item).update
-      when 'Backstage passes to a TAFKAL80ETC concert' then Concert.new(item).update
-      when 'Conjured Mana Cake' then Conjure.new(item).update
-      else Standard.new(item).update
-      end
+    items.each { |item| enhance(item).update! }
+  end
+
+  def enhance(item)
+    case item.name
+    when /^Aged Brie/ then item.extend(Cheese)
+    when /^Sulfuras/  then item.extend(Sulfuras)
+    when /^Backstage/ then item.extend(Concert)
+    when /^Conjured/  then item.extend(Conjure)
+    else                   item.extend(Standard)
     end
+    item
   end
 end
+
+module Updater
+  def one_day_passes
+    @sell_in -= 1
+  end
+
+  def verify_quality_limits
+    return if @quality.between?(0, 50)
+    @quality = (@quality > 0 ? 50 : 0)
+  end
+end
+
+module Standard
+  include Updater
+  def update!
+    one_day_passes
+    @quality -= (@sell_in >= 0 ? 1 : 2)
+    verify_quality_limits
+  end
+end
+
+module Cheese
+  include Updater
+  def update!
+    one_day_passes
+    @quality += 1
+    verify_quality_limits
+  end
+end
+
+module Sulfuras
+  def update!
+  end
+end
+
+module Concert
+  include Updater
+  def update!
+    one_day_passes
+
+    return @quality = 0 if @sell_in <= 0
+    case @sell_in
+    when (1..5)  then @quality += 3
+    when (6..10) then @quality += 2
+    else              @quality += 1
+    end
+    verify_quality_limits
+  end
+end
+
+module Conjure
+  include Updater
+  def update!
+    one_day_passes
+    2.times { @quality -= (@sell_in >= 0 ? 1 : 2) }
+    verify_quality_limits
+  end
+end
+
