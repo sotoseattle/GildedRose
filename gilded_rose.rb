@@ -17,24 +17,40 @@ class GildedRose
 
   def update_quality
     items.each do |item|
-      one_day_passes(item)
-
       case item.name
-      when 'Aged Brie' then update_brie(item)
-      when 'Sulfuras, Hand of Ragnaros' then update_sulfuras(item)
-      when 'Backstage passes to a TAFKAL80ETC concert' then update_concert(item)
-      when 'Conjured Mana Cake' then update_conjure(item)
+      when 'Aged Brie'
+        for_all_items(:update_brie, item)
+      when 'Sulfuras, Hand of Ragnaros'
+        for_all_items(:update_sulfuras, item)
+      when 'Backstage passes to a TAFKAL80ETC concert'
+        for_all_items(:update_concert, item)
+      when 'Conjured Mana Cake'
+        for_all_items(:update_conjure, item)
       else
-        update_standard(item)
+        for_all_items(:update_as_standard, item)
       end
     end
   end
+
+  def for_all_items(quality_updater, item)
+    one_day_passes(item)
+
+    public_send(quality_updater, item)
+
+    verify_quality_limits(item) unless quality_updater == :update_sulfuras
+  end
+
 
   def one_day_passes(item)
     item.sell_in -= 1
   end
 
-  def update_standard(item)
+  def verify_quality_limits(item)
+    return if item.quality.between?(0, 50)
+    item.quality = (item.quality > 0 ? 50 : 0)
+  end
+
+  def update_as_standard(item)
     item.quality -= (item.sell_in >= 0 ? 1 : 2)
     item.quality = 0 if item.quality < 0
   end
@@ -58,6 +74,6 @@ class GildedRose
   end
 
   def update_conjure(item)
-    2.times { update_standard(item) }
+    2.times { update_as_standard(item) }
   end
 end
