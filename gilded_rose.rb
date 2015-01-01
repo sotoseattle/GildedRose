@@ -1,5 +1,63 @@
 require './item.rb'
 
+class Stuff
+  def initialize(item)
+    @item = item
+  end
+
+  def one_day_passes
+    @item.sell_in -= 1
+  end
+
+  def verify_quality_limits
+    return if @item.quality.between?(0, 50)
+    @item.quality = (@item.quality > 0 ? 50 : 0)
+  end
+end
+
+class Standard < Stuff
+  def update
+    one_day_passes
+    @item.quality -= (@item.sell_in >= 0 ? 1 : 2)
+    verify_quality_limits
+  end
+end
+
+class Cheese < Stuff
+  def update
+    one_day_passes
+    @item.quality += 1
+    verify_quality_limits
+  end
+end
+
+class Sulfuras < Stuff
+  def update
+  end
+end
+
+class Concert < Stuff
+  def update
+    one_day_passes
+
+    return @item.quality = 0 if @item.sell_in <= 0
+    case @item.sell_in
+    when (1..5)  then @item.quality += 3
+    when (6..10) then @item.quality += 2
+    else              @item.quality += 1
+    end
+    verify_quality_limits
+  end
+end
+
+class Conjure < Stuff
+  def update
+    one_day_passes
+    2.times { @item.quality -= (@item.sell_in >= 0 ? 1 : 2) }
+    verify_quality_limits
+  end
+end
+
 class GildedRose
   attr_reader :items
 
@@ -18,62 +76,12 @@ class GildedRose
   def update_quality
     items.each do |item|
       case item.name
-      when 'Aged Brie'
-        for_all_items(:update_brie, item)
-      when 'Sulfuras, Hand of Ragnaros'
-        for_all_items(:update_sulfuras, item)
-      when 'Backstage passes to a TAFKAL80ETC concert'
-        for_all_items(:update_concert, item)
-      when 'Conjured Mana Cake'
-        for_all_items(:update_conjure, item)
-      else
-        for_all_items(:update_as_standard, item)
+      when 'Aged Brie' then Cheese.new(item).update
+      when 'Sulfuras, Hand of Ragnaros' then Sulfuras.new(item).update
+      when 'Backstage passes to a TAFKAL80ETC concert' then Concert.new(item).update
+      when 'Conjured Mana Cake' then Conjure.new(item).update
+      else Standard.new(item).update
       end
     end
-  end
-
-  def for_all_items(quality_updater, item)
-    one_day_passes(item)
-
-    public_send(quality_updater, item)
-
-    verify_quality_limits(item) unless quality_updater == :update_sulfuras
-  end
-
-
-  def one_day_passes(item)
-    item.sell_in -= 1
-  end
-
-  def verify_quality_limits(item)
-    return if item.quality.between?(0, 50)
-    item.quality = (item.quality > 0 ? 50 : 0)
-  end
-
-  def update_as_standard(item)
-    item.quality -= (item.sell_in >= 0 ? 1 : 2)
-    item.quality = 0 if item.quality < 0
-  end
-
-  def update_brie(item)
-    item.quality += 1 unless item.quality == 50
-  end
-
-  def update_sulfuras(item)
-    item.sell_in = 0
-  end
-
-  def update_concert(item)
-    return item.quality = 0 if item.sell_in <= 0
-
-    case item.sell_in
-    when (1..5)  then item.quality += 3
-    when (6..10) then item.quality += 2
-    else              item.quality += 1
-    end
-  end
-
-  def update_conjure(item)
-    2.times { update_as_standard(item) }
   end
 end
