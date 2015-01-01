@@ -61,4 +61,48 @@ describe GildedRose do
     end
   end
 
+  describe 'special case: backstage pass' do
+    it 'quality increases up to 10 days before concert' do
+      initial_quality = tafk.quality
+      subject.update_quality
+      tafk.quality.must_equal initial_quality + 1
+    end
+
+    it 'quality increases by 2 from 10 to 6 days before concert' do
+      6.times { subject.update_quality }
+      initial_quality = tafk.quality
+      subject.update_quality
+      tafk.quality.must_equal initial_quality + 2
+    end
+
+    it 'quality increases by 3 from 5 to the day of the concert' do
+      10.times { subject.update_quality }
+      initial_quality = tafk.quality
+      subject.update_quality
+      tafk.quality.must_equal initial_quality + 3
+    end
+
+    it 'quality becomes 0 on the day of the concert' do
+      15.times { subject.update_quality }
+      initial_quality = tafk.quality
+      subject.update_quality
+      tafk.quality.must_equal 0
+    end
+
+    it 'quality remains at 0 after the concert' do
+      16.times { subject.update_quality }
+      initial_quality = tafk.quality
+      subject.update_quality
+      tafk.quality.must_equal 0
+    end
+  end
+
+  describe 'special case: conjured' do
+    it 'quality falls twice as fast as standard items' do
+      skip # until refactored finished
+      initial_quality = conj.quality
+      subject.update_quality
+      conj.quality.must_equal initial_quality - 2
+    end
+  end
 end

@@ -20,7 +20,7 @@ def sulf
   subject.items.detect { |i| i.name == "Sulfuras, Hand of Ragnaros" }
 end
 
-def pass
+def tafk
   subject.items.detect { |i| i.name == "Backstage passes to a TAFKAL80ETC concert" }
 end
 
