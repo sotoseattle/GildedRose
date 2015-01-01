@@ -17,6 +17,7 @@ end
 
 module Standard
   include Basic_Updater
+
   def update_quality
     @quality -= (@sell_in >= 0 ? 1 : 2)
   end
@@ -24,6 +25,7 @@ end
 
 module Cheesy
   include Basic_Updater
+
   def update_quality
     @quality += 1
   end
@@ -36,6 +38,7 @@ end
 
 module Tickety
   include Basic_Updater
+
   def update_quality
     return @quality = 0 if @sell_in <= 0
     case @sell_in
@@ -48,6 +51,7 @@ end
 
 module Conjured
   include Basic_Updater
+
   def update_quality
     2.times { @quality -= (@sell_in >= 0 ? 1 : 2) }
   end
