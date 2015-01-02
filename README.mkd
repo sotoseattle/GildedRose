@@ -1,3 +1,16 @@
+#### This is a mini exercise for the Seattle.rb group.
+
+Notes: I am happy with my latest solution because:
+
+- it does not touch the Item class
+- it does not touch the GildedRose class initializer nor the @items variable.
+- it iterates over each item, adding a method on-the-fly and calling it, so the GildedRose class remains very light.
+- instead of messing inside the Item, it extends each Item object adding an additional ad-hoc method (update!)
+- instead of letting the GildedRose object decide how to do the update of the items, all the responsability to customize the update! method is deferred to the ItemUpdater class, who customizes at the instantiation of the module! (I know, freakingly weird!)
+- I have not DRY'ed the different item-specific update! methods because I understand DRY to refer to knowledge, not code. And I consider that each update! should hold all coherent functionality, instead of having the common menthods wrapped and/or extracted out.
+
+-------
+
 If you want to get cracking on the ruby source then do this:
 
     git clone git@github.com:professor/GildedRose.git
