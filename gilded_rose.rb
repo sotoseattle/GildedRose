@@ -1,5 +1,5 @@
 require './item.rb'
-require './gilded_updaters.rb'
+require './item_updater.rb'
 
 class GildedRose
   attr_reader :items
