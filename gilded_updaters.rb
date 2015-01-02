@@ -1,4 +1,4 @@
-module Basic_Updater
+module BasicUpdater
   def update!
     one_day_passes
     update_quality
@@ -16,7 +16,7 @@ module Basic_Updater
 end
 
 module Standard
-  include Basic_Updater
+  include BasicUpdater
 
   def update_quality
     @quality -= (@sell_in >= 0 ? 1 : 2)
@@ -24,7 +24,7 @@ module Standard
 end
 
 module Cheesy
-  include Basic_Updater
+  include BasicUpdater
 
   def update_quality
     @quality += 1
@@ -37,7 +37,7 @@ module Sulfuric
 end
 
 module Tickety
-  include Basic_Updater
+  include BasicUpdater
 
   def update_quality
     return @quality = 0 if @sell_in <= 0
@@ -50,7 +50,7 @@ module Tickety
 end
 
 module Conjured
-  include Basic_Updater
+  include BasicUpdater
 
   def update_quality
     2.times { @quality -= (@sell_in >= 0 ? 1 : 2) }
