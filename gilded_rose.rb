@@ -17,18 +17,7 @@ class GildedRose
   end
 
   def update_quality
-    items.each { |item| enhance(item).update! }
-  end
-
-  def enhance(item)
-    case item.name
-    when /^Aged Brie/ then item.extend(Cheesy)
-    when /^Sulfuras/  then item.extend(Sulfuric)
-    when /^Backstage/ then item.extend(Tickety)
-    when /^Conjured/  then item.extend(Conjured)
-    else                   item.extend(Standard)
-    end
-    item
+    items.each { |item| item.extend(ItemUpdater.new(item)).update! }
   end
 end
 
